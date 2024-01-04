@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--内部日志信息保持静默-->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
+    <!--获取SpringBoot配置文件中的配置-->
+    <springProperty scope="context" name="serviceName" source="spring.application.name"
+                    defaultValue="spring"/>
+    <contextName>${serviceName}</contextName>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!--控制台日志打印格式-->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="Log=%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [service_name: ${serviceName:-undefined}] [class_name: %c] [thread_name: %t] [trace_id: %X{TraceId:-default}] [user_id: %X{UserId:-default}] => %m%n"/>
+
+    <!--控制台日志字符集-->
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <!--文件日志打印格式-->
+    <property name="FILE_LOG_PATTERN"
+              value="Log=%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [service_name: ${serviceName:-undefined}] [class_name: %c] [thread_name: %t] [trace_id: %X{TraceId:-default}] [user_id: %X{UserId:-default}] => %m%n"/>
+    <!--文件日志字符集-->
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <!--日志文件存放路径-->
+    <property name="LOG_PATH" value="${LOG_PATH:-./log/}"/>
+    <!--日志文件名-->
+    <property name="LOG_FILE" value="${LOG_PATH}/${serviceName}.log"/>
+
+    <!--滚动日志文件名称格式-->
+    <property name="LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN"
+              value="${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}"/>
+    <!--是否清除历史日志文件-->
+    <property name="LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START"
+              value="${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}"/>
+    <!--滚动日志文件最大大小，不一定是就是到了10MB就截取，可能小于10MB，可能大于10MB-->
+    <property name="LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE" value="${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}"/>
+    <property name="LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP" value="${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}"/>
+    <!--滚动日志存放历史记录时长-->
+    <property name="LOGBACK_ROLLINGPOLICY_MAX_HISTORY" value="${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}"/>
+
+
+    <!--控制台输出-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+    <!--滚动日志输出-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>${LOG_FILE}</file>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN}</fileNamePattern>
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP}</totalSizeCap>
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="ERROR"/>
+    <logger name="org.apache.catalina.util.LifecycleBase" level="ERROR"/>
+    <logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN"/>
+    <logger name="org.apache.sshd.common.util.SecurityUtils" level="WARN"/>
+    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN"/>
+    <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+    <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.endpoint.jmx" level="WARN"/>
+
+    <!--切面日志，INFO级别-->
+
+
+    <!--本地环境，默认INFO级别，可打印控制台日志和文件日志-->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!--非本地文件，默认打印WARN级别以上日志-->
+    <springProfile name="!local">
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>

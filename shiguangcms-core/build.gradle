@@ -1,0 +1,10 @@
+dependencies {
+    api('com.fasterxml.jackson.core:jackson-annotations')
+    api('com.fasterxml.jackson.core:jackson-core')
+    api('com.fasterxml.jackson.core:jackson-databind')
+    api('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    api('com.google.code.findbugs:annotations')
+    api('io.swagger:swagger-annotations')
+    api('jakarta.validation:jakarta.validation-api')
+    api('org.slf4j:slf4j-api')
+}

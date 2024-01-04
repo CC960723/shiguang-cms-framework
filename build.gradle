@@ -1,0 +1,191 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url = archiveUrl
+            allowInsecureProtocol = true
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    dependencies {
+        //classpath("org.springframework.boot:spring-boot-gradle-plugin:2.7.18")
+        classpath("io.spring.gradle:dependency-management-plugin:1.1.3")
+    }
+}
+
+ext {
+    set("dependenciesVersion", "jdk8-1.0.1")
+    set('moduleDescription',
+            ['shiguangcms-core'                             : '用于定义核心类，基础类',
+             'shiguangcms-common'                           : '用于定义统一日志，统一异常，统一国际化，公共常量',
+             'shiguangcms-spring-boot-starter-openapi2'     : '用于定义统一接口文档配置',
+             'shiguangcms-spring-boot-starter-webmvc'       : '用于定义公共异常处理，MVC扩展配置',
+             'shiguangcms-spring-boot-starter-webflux'      : '用于定义公共过滤器',
+             'shiguangcms-spring-boot-starter-file'         : '用于定义通用文件上传，下载解决方案',
+             'shiguangcms-spring-boot-starter-redis'        : '用于定制Redis客户端，Redis分布式锁',
+             'shiguangcms-spring-boot-starter-elasticsearch': '基于最新的ElasticSearch JavaApi定制新的Client工具类',
+             'shiguangcms-spring-boot-starter-mybatis'      : '基于Mybatis扩展其他插件，比如分页插件'
+
+            ])
+}
+
+subprojects {
+    group = "cc.cww.framework"
+    version = "1.0.0-SNAPSHOT"
+
+    apply {
+        plugin("java")
+        plugin("java-library")
+        plugin("io.spring.dependency-management")
+        plugin("maven-publish")
+        plugin("idea")
+    }
+
+    repositories {
+        maven {
+            url = archiveUrl
+            allowInsecureProtocol = true
+        }
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            //统一版本管理
+            mavenBom "cc.cww.dependencies:shiguang-cms-dependencies:${dependenciesVersion}"
+        }
+        //不生成pom中<dependencyManagement>
+        generatedPomCustomization {
+            enabled = false
+        }
+    }
+
+    dependencies {
+        compileOnly gradleApi()
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+    //构建源码
+    java {
+        withSourcesJar()
+    }
+
+    //spring-configuration-metadata.json文件
+    tasks.named('compileJava') {
+        inputs.files(tasks.named('processResources'))
+    }
+
+    //定义推送脚本
+    publishing {
+        //这个闭包的委派类是PublishingExtension
+        getDelegate().publications(publicationContainer -> {
+
+            publicationContainer.create("caiweiwei", MavenPublication.class, mavenPublication -> {
+                //设置Maven的GAV坐标
+                mavenPublication.setGroupId(getProject().group)
+                mavenPublication.setArtifactId(getProject().name)
+                mavenPublication.setVersion(getProject().version)
+                //设置POM信息
+                mavenPublication.pom(mavenPom -> {
+                    mavenPom.name = getProject().name
+                    mavenPom.description = moduleDescription[getProject().name]
+                    mavenPom.url = "https://github.com/CC960723/shiguang-cms-framework"
+                    //成立时间
+                    mavenPom.inceptionYear = "2023-12-31 16:05:55"
+                    //项目的许可信息。pom文件中的<licenses>
+                    mavenPom.licenses(licenseSpec -> {
+                        licenseSpec.license(pomLicense -> {
+                            pomLicense.name = "MIT License"
+                            pomLicense.url = "https://opensource.org/license/mit/"
+                            pomLicense.comments = "MIT许可协议"
+                            pomLicense.distribution = "repo"
+                        })
+                    })
+                    //项目的组织信息。pom文件中的<organization>
+                    mavenPom.organization(organizationSpec -> {
+                        organizationSpec.name = "CaiWeiWei Org"
+                        organizationSpec.url = "https://www.caiweiwei.cc"
+                    })
+
+                    mavenPom.developers(developerSpec -> {
+                        developerSpec.developer(mavenPomDeveloper -> {
+                            mavenPomDeveloper.name = "蔡伟伟"
+                            mavenPomDeveloper.email = "976449590@qq.com"
+                            mavenPomDeveloper.organization = "caiweiwei"
+                            mavenPomDeveloper.roles = ["Developer", "Maintainer"]
+                        })
+                    })
+
+                    mavenPom.scm(scmSpec -> {
+                        scmSpec.connection = "scm:git:git://github.com/CC960723/shiguang-cms-framework"
+                        scmSpec.developerConnection = "scm:git:git://github.com/CC960723/shiguang-cms-framework"
+                        scmSpec.url = "https://github.com/CC960723/shiguang-cms-framework"
+                        scmSpec.tag = "framework"
+                    })
+
+                    mavenPom.issueManagement(issueSpc -> {
+                        issueSpc.system = "GitHub"
+                        issueSpc.url = "https://github.com/CC960723/shiguang-cms-framework/issues"
+                    })
+
+                })
+                //设置软件组件
+                /**
+                 * 提供应发布的软件组件
+                 * 1.组件声明的任何工件都将包含在发布中。
+                 * 2.组件声明的依赖项将包含在已发布的元数据中。
+                 * 目前支持 3 种类型的组件：“components.java”（由 JavaPlugin 添加）、“components.web”（由 WarPlugin 添加）和“components.javaPlatform”（由 JavaPlatformPlugin 添加）。
+                 */
+                mavenPublication.from(components.java)
+
+                //配置版本映射策略。例如，要使用运行时依赖项的解析版本：
+                mavenPublication.versionMapping(versionMappingStrategy -> {
+                    //引入implementation声明的依赖项策略
+                    versionMappingStrategy.usage("java-runtime", strategy -> {
+                        strategy.fromResolutionResult()
+                    })
+                    //引入compile声明的依赖项策略
+                    versionMappingStrategy.usage("java-api", strategy -> {
+                        strategy.fromResolutionOf("runtimeClasspath")
+                    })
+                })
+            })
+
+        })
+        getDelegate().repositories(repositoryHandler -> {
+            repositoryHandler.maven(mavenArtifactRepository -> {
+                mavenArtifactRepository.name = "CaiWeiWeiNexus"
+                if (version.endsWith("SNAPSHOT") || version.endsWith("snapshot")) {
+                    mavenArtifactRepository.url = archiveSnapshotUrl
+                } else {
+                    mavenArtifactRepository.url = archiveReleaseUrl
+                }
+                //配置认证信息
+                mavenArtifactRepository.credentials(passwordCredentials -> {
+                    passwordCredentials.username = archiveUser
+                    passwordCredentials.password = archivePassword
+                })
+                mavenArtifactRepository.allowInsecureProtocol = true
+            })
+        })
+    }
+}
+
+allprojects {
+    configurations.configureEach {
+        //实时刷新gradle依赖缓存
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        //构建遇到依赖冲突时，就立即构建失败
+        resolutionStrategy.failOnVersionConflict()
+    }
+}
+
+
+
+
+
