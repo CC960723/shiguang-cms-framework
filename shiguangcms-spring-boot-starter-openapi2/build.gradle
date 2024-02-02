@@ -1,0 +1,7 @@
+dependencies {
+    api project(":shiguangcms-common")
+    api('org.springframework.boot:spring-boot-starter')
+    api('com.github.xiaoymin:knife4j-openapi2-spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter-web')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}

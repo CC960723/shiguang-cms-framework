@@ -1,0 +1,10 @@
+dependencies {
+    api project(":shiguangcms-common")
+    api('io.lettuce:lettuce-core')
+    api('org.springframework.boot:spring-boot-starter')
+    //使用官方版本的客户端，jedis，是Redis的亲儿子。
+    api('redis.clients:jedis')
+    //实现jedis的连接池
+    api('org.apache.commons:commons-pool2')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}

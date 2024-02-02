@@ -26,7 +26,7 @@ public class BaseScrollResult<L extends List<? extends IScrollPageSortId>> exten
      * 数据列表
      */
     @ApiModelProperty(value = "数据列表")
-    private L dataList;
+    private L data;
 
     /**
      * 后一个滚动ID
@@ -35,13 +35,13 @@ public class BaseScrollResult<L extends List<? extends IScrollPageSortId>> exten
     private Long nextScrollId;
 
     @SuppressWarnings({"unchecked"})
-    public static <L extends List<? extends IScrollPageSortId>> BaseScrollResult<L> successOf(L dataList, ScrollPage scrollPage) {
+    public static <L extends List<? extends IScrollPageSortId>> BaseScrollResult<L> successOf(L data, ScrollPage scrollPage) {
         BaseScrollResult<L> result = new BaseScrollResult<>();
-        result.setDataList(dataList);
-        if (dataList == null || dataList.isEmpty()) {
+        result.setData(data);
+        if (data == null || data.isEmpty()) {
             return result;
         }
-        List<IScrollPageSortId> list = (List<IScrollPageSortId>) dataList;
+        List<IScrollPageSortId> list = (List<IScrollPageSortId>) data;
         list.sort((o1, o2) -> {
             if (scrollPage.isScrollSortDesc()) {
                 return Long.compare(o2.getScrollSortId().longValue(), o1.getScrollSortId().longValue());
@@ -49,9 +49,9 @@ public class BaseScrollResult<L extends List<? extends IScrollPageSortId>> exten
                 return Long.compare(o1.getScrollSortId().longValue(), o2.getScrollSortId().longValue());
             }
         });
-        int size = dataList.size();
-        result.setPrevScrollId(dataList.get(0).getScrollSortId().longValue());
-        result.setNextScrollId(dataList.get(size - 1).getScrollSortId().longValue());
+        int size = data.size();
+        result.setPrevScrollId(data.get(0).getScrollSortId().longValue());
+        result.setNextScrollId(data.get(size - 1).getScrollSortId().longValue());
         return result;
     }
 
@@ -63,12 +63,12 @@ public class BaseScrollResult<L extends List<? extends IScrollPageSortId>> exten
         this.prevScrollId = prevScrollId;
     }
 
-    public L getDataList() {
-        return dataList;
+    public L getData() {
+        return data;
     }
 
-    public void setDataList(L dataList) {
-        this.dataList = dataList;
+    public void setData(L data) {
+        this.data = data;
     }
 
     public Long getNextScrollId() {
@@ -83,7 +83,7 @@ public class BaseScrollResult<L extends List<? extends IScrollPageSortId>> exten
     public String toString() {
         return "BaseScrollResult{" +
                 "prevScrollId=" + prevScrollId +
-                ", dataList=" + dataList +
+                ", data=" + data +
                 ", nextScrollId=" + nextScrollId +
                 "} " + super.toString();
     }

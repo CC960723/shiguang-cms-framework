@@ -12,13 +12,13 @@ import java.util.List;
  * @author CaiZhengwei
  * @since 2023/12/31 16:35
  */
-public class BasePageResult<T extends List<?>> extends BaseResult {
+public class BasePageResult<L extends List<?>> extends BaseResult {
 
     /**
      * 数据列表
      */
     @ApiModelProperty(value = "数据列表")
-    private T dataList;
+    private L data;
 
     /**
      * 页码
@@ -42,9 +42,9 @@ public class BasePageResult<T extends List<?>> extends BaseResult {
 
     }
 
-    public static <T extends List<?>> BasePageResult<T> successOf(T dataList, BasePage basePage) {
-        BasePageResult<T> resultPageVo = new BasePageResult<>();
-        resultPageVo.setDataList(dataList);
+    public static <L extends List<?>> BasePageResult<L> successOf(L dataList, BasePage basePage) {
+        BasePageResult<L> resultPageVo = new BasePageResult<>();
+        resultPageVo.setData(dataList);
         if (basePage == null) {
             return resultPageVo;
         }
@@ -57,12 +57,12 @@ public class BasePageResult<T extends List<?>> extends BaseResult {
         return resultPageVo;
     }
 
-    public T getDataList() {
-        return dataList;
+    public L getData() {
+        return data;
     }
 
-    public void setDataList(T dataList) {
-        this.dataList = dataList;
+    public void setData(L data) {
+        this.data = data;
     }
 
     public long getCurrentPage() {
@@ -92,7 +92,7 @@ public class BasePageResult<T extends List<?>> extends BaseResult {
     @Override
     public String toString() {
         return "BasePageResult{" +
-                "dataList=" + dataList +
+                "data=" + data +
                 ", currentPage=" + currentPage +
                 ", pageSize=" + pageSize +
                 ", totalSize=" + totalSize +

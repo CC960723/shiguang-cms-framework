@@ -15,8 +15,8 @@ buildscript {
 }
 
 ext {
-    set("dependenciesVersion", "jdk8-1.0.1")
-    set('moduleDescription',
+    set("ShiGuangCmsDependenciesVersion", "jdk8-1.0.3")
+    set('ModuleDescription',
             ['shiguangcms-core'                             : '用于定义核心类，基础类',
              'shiguangcms-common'                           : '用于定义统一日志，统一异常，统一国际化，公共常量',
              'shiguangcms-spring-boot-starter-openapi2'     : '用于定义统一接口文档配置',
@@ -26,7 +26,6 @@ ext {
              'shiguangcms-spring-boot-starter-redis'        : '用于定制Redis客户端，Redis分布式锁',
              'shiguangcms-spring-boot-starter-elasticsearch': '基于最新的ElasticSearch JavaApi定制新的Client工具类',
              'shiguangcms-spring-boot-starter-mybatis'      : '基于Mybatis扩展其他插件，比如分页插件'
-
             ])
 }
 
@@ -53,7 +52,7 @@ subprojects {
     dependencyManagement {
         imports {
             //统一版本管理
-            mavenBom "cc.cww.dependencies:shiguang-cms-dependencies:${dependenciesVersion}"
+            mavenBom "cc.cww.dependencies:shiguang-cms-dependencies:${ShiGuangCmsDependenciesVersion}"
         }
         //不生成pom中<dependencyManagement>
         generatedPomCustomization {
@@ -92,7 +91,7 @@ subprojects {
                 //设置POM信息
                 mavenPublication.pom(mavenPom -> {
                     mavenPom.name = getProject().name
-                    mavenPom.description = moduleDescription[getProject().name]
+                    mavenPom.description = ModuleDescription[getProject().name]
                     mavenPom.url = "https://github.com/CC960723/shiguang-cms-framework"
                     //成立时间
                     mavenPom.inceptionYear = "2023-12-31 16:05:55"

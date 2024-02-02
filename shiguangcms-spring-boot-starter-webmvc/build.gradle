@@ -1,0 +1,9 @@
+dependencies {
+    api project(":shiguangcms-common")
+    api('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.boot:spring-boot-starter-validation')
+    api('org.springframework:spring-aspects')
+    compileOnly('org.springframework.cloud:spring-cloud-commons')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}

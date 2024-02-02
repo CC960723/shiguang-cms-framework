@@ -1,0 +1,7 @@
+dependencies {
+    api project(':shiguangcms-common')
+    api('org.springframework.boot:spring-boot-starter')
+    api('org.thymeleaf:thymeleaf')
+    compileOnly('org.springframework.cloud:spring-cloud-commons')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}

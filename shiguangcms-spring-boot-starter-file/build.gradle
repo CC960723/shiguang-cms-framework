@@ -1,0 +1,9 @@
+dependencies {
+    api project(":shiguangcms-common")
+    api('org.springframework.boot:spring-boot-starter')
+    implementation('io.minio:minio')
+    implementation('org.csource:fastdfs-client-java')
+    implementation('com.jcraft:jsch')
+    implementation('commons-net:commons-net')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}
