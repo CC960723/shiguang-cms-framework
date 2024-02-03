@@ -18,5 +18,5 @@ include 'shiguangcms-spring-boot-starter-file'
 include 'shiguangcms-spring-boot-starter-redis'
 include 'shiguangcms-spring-boot-starter-elasticsearch'
 include 'shiguangcms-spring-boot-starter-mybatis'
-
+include 'shiguangcms-spring-boot-starter-mq'
 

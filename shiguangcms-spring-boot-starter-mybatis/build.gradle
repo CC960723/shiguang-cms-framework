@@ -2,5 +2,6 @@ dependencies {
     api project(":shiguangcms-common")
     api('org.springframework.boot:spring-boot-starter')
     api('org.mybatis.spring.boot:mybatis-spring-boot-starter')
+    testImplementation('mysql:mysql-connector-java')
     annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
 }
