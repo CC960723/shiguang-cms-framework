@@ -26,7 +26,8 @@ ext {
              'shiguangcms-spring-boot-starter-redis'        : '用于定制Redis客户端，Redis分布式锁',
              'shiguangcms-spring-boot-starter-elasticsearch': '基于最新的ElasticSearch JavaApi定制新的Client工具类',
              'shiguangcms-spring-boot-starter-mybatis'      : '基于Mybatis扩展其他插件，比如分页插件'
-            ])
+            ]
+    )
 }
 
 subprojects {
@@ -42,6 +43,7 @@ subprojects {
     }
 
     repositories {
+        mavenLocal()
         maven {
             url = archiveUrl
             allowInsecureProtocol = true
