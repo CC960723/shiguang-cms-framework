@@ -1,10 +1,12 @@
 package cc.caiweiwei.framework.shiguangcms.webmvc;
 
 import cc.caiweiwei.framework.shiguangcms.common.utils.SnowflakeIdUtil;
+import cc.caiweiwei.framework.shiguangcms.webmvc.servletcomponent.ServletComponentPackageBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -22,6 +24,7 @@ import java.net.InetAddress;
  * @since 2024/1/2 16:54
  */
 @ComponentScan(basePackageClasses = {WebMvcAutoConfiguration.class})
+@ServletComponentScan(basePackageClasses = {ServletComponentPackageBase.class})
 @AutoConfiguration
 public class WebMvcAutoConfiguration {
 

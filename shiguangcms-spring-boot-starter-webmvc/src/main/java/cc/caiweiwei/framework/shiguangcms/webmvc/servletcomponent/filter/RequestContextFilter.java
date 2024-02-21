@@ -1,4 +1,4 @@
-package cc.caiweiwei.framework.shiguangcms.webmvc.filter;
+package cc.caiweiwei.framework.shiguangcms.webmvc.servletcomponent.filter;
 
 import cc.caiweiwei.framework.shiguangcms.common.constant.CommonConstant;
 import cc.caiweiwei.framework.shiguangcms.common.utils.SnowflakeIdUtil;
