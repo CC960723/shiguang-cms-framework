@@ -22,11 +22,11 @@ import java.io.IOException;
  * @author CaiZhengwei
  * @since 2024/1/2 22:20
  */
-@WebFilter(filterName = "requestContextFilter", urlPatterns = {"/*"}, initParams = {@WebInitParam(
+@WebFilter(filterName = "customRequestContextFilter", urlPatterns = {"/*"}, initParams = {@WebInitParam(
         name = "ignoreUris",
         value = "/doc.html,/v2/api-docs,/swagger-resources,/favicon.ico"
 )})
-public class RequestContextFilter extends HttpFilter {
+public class CustomRequestContextFilter extends HttpFilter {
 
     private static final String IGNORE_URIS_PARAM_NAME = "ignoreUris";
 
