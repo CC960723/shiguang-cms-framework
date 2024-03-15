@@ -6,11 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：jackson配置类
@@ -25,6 +29,23 @@ public class JacksonConfiguration {
     @Primary
     public ObjectMapper getObjectMapper() {
         return JsonUtil.OBJECT_MAPPER;
+    }
+
+    /**
+     * 扩展json消息转换映射关系，除了content-type为application/json外，还支持application/octet-stream的字节流json数据转换
+     *
+     * @param objectMapper 对象映射
+     * @return json数据转换器
+     */
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+        //除了支持JSON格式的字符串外，还支持字节流的json数据
+        supportedMediaTypes.add(MediaType.APPLICATION_OCTET_STREAM);
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        return mappingJackson2HttpMessageConverter;
     }
 
     /**
